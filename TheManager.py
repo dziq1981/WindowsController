@@ -6,7 +6,7 @@ import Display
 import traceback
 
 
-disp = Display.Display()
+disp = Display.Display(2,16)
 controllerTurnRelaysOff()
 
 def convertTimeToFloat(hrs, min):    
@@ -14,17 +14,19 @@ def convertTimeToFloat(hrs, min):
 
 def openWindow():
     global windowOpenedFlag
-    disp.displayTextLine("Otwieram okno!",True,0)
+    disp.displayTextLine("Otwieram okno!",True,2)
     print("Opening the window")
     windowOpenedFlag = True
     controllerOpenWindow()
 
 def closeWindow():
     global windowOpenedFlag
-    disp.displayTextLine("Zamykam okno!",True,0)
+    disp.displayTextLine("Zamykam okno!",True,2)
     print("Closing the window")
     windowOpenedFlag = False
     controllerCloseWindow()
+
+
 
 closingTime = convertTimeToFloat(23,00)
 openingTime = convertTimeToFloat(6,0)
@@ -36,13 +38,11 @@ if closingTime<openingTime:
 firstTime = True
 windowOpenedFlag = False
 
-try:
-    line =0
+try:    
     while True:
-        nowFull = datetime.now()
-        
+        nowFull = datetime.now()        
         now = convertTimeToFloat(nowFull.hour,nowFull.minute)
-        text= str(nowFull.hour) +":" + str(nowFull.minute)
+        #text= str(nowFull.hour) +":" + ("0" if nowFull.minute<10 else "") + "{:02d}".format(str(nowFull.minute))        
         if firstTime:
             if now>=openingTime and now<closingTime:
                 openWindow()                
@@ -54,16 +54,13 @@ try:
                 openWindow()                
             elif now>=closingTime and windowOpenedFlag:
                 closeWindow()
-        disp.displayTextLine(text,True,line)
-        line+=1
-        if line>=25:
-            line=0
+        disp.displayTimeString(nowFull)
         sleep(15)
 except Exception as e:
     print(traceback.print_exc())
-    disp.displayTextLine("Program się wywalił.",True,0)
-    disp.displayTextLine("Zaloguj się na maszynę",True,8)
-    disp.displayTextLine("i sprawdź trace'a",True,16)
+    disp.displayTextLine("Program się wywalił.",True,0,10)
+    disp.displayTextLine("Zaloguj się na maszynę",False,8,10)
+    disp.displayTextLine("i sprawdź trace'a",False,16,10)
 
 
 
