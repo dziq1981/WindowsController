@@ -4,13 +4,13 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import subprocess
 import string
-
+import SI7021
 
 
 class Display():
     RST = None 
     disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
-
+    sensor = SI7021.Si7021()
     # Initialize library.
     disp.begin()
 
@@ -38,7 +38,7 @@ class Display():
     
     # Load default font.
     #font = ImageFont.load_default()
-    
+    counter=0
     
     def __init__(self, minLine, maxLine) -> None:
         self.minLine = minLine
@@ -61,7 +61,7 @@ class Display():
         self.currentLine+=2
         if self.currentLine>=self.maxLine:
             self.currentLine=self.minLine
-            self.displayStats()
+            #self.displayStats()
 
     def clearStr(self, str2clear : str):
         newString = str(str2clear)     
@@ -70,6 +70,34 @@ class Display():
         newString = newString.replace("'","")
         print(newString)
         return newString
+
+    def displayTemperature(self):
+        temp = self.sensor.readTemp()        
+        txt = f"{temp:.1f}°C"
+        print(txt)
+        self.displayTextLine(txt,True,10,20)
+
+    def displayhumidity(self):
+        hum = self.sensor.readHumidity()
+        txt = f"{hum:.1f}%"
+        print(txt)
+        self.displayTextLine(txt,True,10,20)
+
+
+    def displayInLoop(self,time2display):
+        if self.counter == 0:
+            self.displayTimeString(time2display)
+        elif self.counter == 1:
+            self.displayStats()
+        elif self.counter == 2:
+            self.displayTemperature()
+        elif self.counter == 3:
+            self.displayhumidity()
+        else:
+            self.displayTimeString(time2display)
+            self.counter=0
+        self.counter+=1
+
 
     def displayStats(self):
             # Draw a black filled box to clear the image.

@@ -54,13 +54,13 @@ try:
                 openWindow()                
             elif now>=closingTime and windowOpenedFlag:
                 closeWindow()
-        disp.displayTimeString(nowFull)
+        disp.displayInLoop(nowFull)
         sleep(15)
 except Exception as e:
     print(traceback.print_exc())
-    disp.displayTextLine("Program się wywalił.",True,0,10)
-    disp.displayTextLine("Zaloguj się na maszynę",False,8,10)
-    disp.displayTextLine("i sprawdź trace'a",False,16,10)
+    disp.displayTextLine("Program się wywalił.",True,0,8)
+    disp.displayTextLine("Zaloguj się na maszynę",False,8,8)
+    disp.displayTextLine("i sprawdź trace'a",False,16,8)
 
 
 
