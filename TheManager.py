@@ -4,6 +4,7 @@ from time import sleep
 import sys
 import Display
 import traceback
+import ParameterStorage
 
 
 disp = Display.Display(2,16)
@@ -13,17 +14,17 @@ def convertTimeToFloat(hrs, min):
     return float(hrs)+float(min)/60.0
 
 def openWindow():
-    global windowOpenedFlag
+    #global windowOpenedFlag
     disp.displayTextLine("Otwieram okno!",True,2)
     print("Opening the window")
-    windowOpenedFlag = True
+    #windowOpenedFlag = True
     controllerOpenWindow()
 
 def closeWindow():
-    global windowOpenedFlag
+    #global windowOpenedFlag
     disp.displayTextLine("Zamykam okno!",True,2)
     print("Closing the window")
-    windowOpenedFlag = False
+    #windowOpenedFlag = False
     controllerCloseWindow()
 
 
@@ -36,7 +37,7 @@ if closingTime<openingTime:
     sys.exit()
 
 firstTime = True
-windowOpenedFlag = False
+#windowOpenedFlag = False
 
 try:    
     while True:
@@ -50,9 +51,9 @@ try:
                 closeWindow()
             firstTime = False
         else:
-            if now>=openingTime and now<closingTime and not windowOpenedFlag:
+            if now>=openingTime and now<closingTime and not isWindowOpen(): #windowOpenedFlag:
                 openWindow()                
-            elif now>=closingTime and windowOpenedFlag:
+            elif now>=closingTime and isWindowOpen():#windowOpenedFlag:
                 closeWindow()
         disp.displayInLoop(nowFull)
         sleep(15)
@@ -61,6 +62,8 @@ except Exception as e:
     disp.displayTextLine("Program się wywalił.",True,0,8)
     disp.displayTextLine("Zaloguj się na maszynę",False,8,8)
     disp.displayTextLine("i sprawdź trace'a",False,16,8)
+finally:
+    ParameterStorage.dumpMeasurements()
 
 
 

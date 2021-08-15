@@ -3,14 +3,13 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import subprocess
-import string
-import SI7021
+import TemperatureSensor
 
 
 class Display():
     RST = None 
-    disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
-    sensor = SI7021.Si7021()
+    disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)    
+    sensor =TemperatureSensor.Si7021()
     # Initialize library.
     disp.begin()
 
@@ -112,8 +111,6 @@ class Display():
         MemUsage = self.clearStr(subprocess.check_output(cmd, shell = True ))
         cmd = "df -h | awk '$NF==\"/\"{printf \"Disk: %d/%dGB %s\", $3,$2,$5}'"
         Disk = self.clearStr(subprocess.check_output(cmd, shell = True ))
-
-        # Write two lines of text.
 
         self.draw.text((self.x, self.top),       "IP: " + str(IP),  font=font, fill=255)
         self.draw.text((self.x, self.top+8),     str(CPU), font=font, fill=255)

@@ -5,6 +5,7 @@ Based on the code found at: https://github.com/herm/Si7021
 
 from time import sleep
 import smbus
+import ParameterStorage
 
 class Si7021:
 
@@ -30,9 +31,18 @@ class Si7021:
     USR_VDDS = 64
     USR_HTRE = 4
     USR_RES0 = 1
+
+    lastTemperatureMeasurement =-100
+    lastHumidityMeasurement = -100
+
+    TEMPERATURE_PARAM_NAME = " temperature"
+    RELATIVE_HUMIDITY_PARAM_NAME = "humidity"
+
     def __init__(self):
         self.bus = smbus.SMBus(1)
         self.addr = 0x40
+        ParameterStorage.addParameter(self.TEMPERATURE_PARAM_NAME)
+        ParameterStorage.addParameter(self.RELATIVE_HUMIDITY_PARAM_NAME)
     
     def persistentBusRead(self, registerAddr, loops=50):
         """ Tries to read from the I2C bus as many times as defined - tries again if exception is raised """
@@ -81,6 +91,8 @@ class Si7021:
         """ Reads the temperature from the sensor in degrees Celsius - if lastTemp set to True reads it from the buffer without measurement"""      
         t = self.swapBytes(self.persistentBusRead(self.TEMP_MEASURE_HOLD if not lastTemp else self.LAST_TEMPERATURE))
         t = 175.72 * t / 65536. - 46.85 # recalculated like in DS to degrees Celsius
+        ParameterStorage.provideValue(self.TEMPERATURE_PARAM_NAME,t)
+        self.lastTemperatureMeasurement=t
         return t
 
     def readHumidity(self):
@@ -88,6 +100,8 @@ class Si7021:
         rh =self.swapBytes(self.persistentBusRead(self.RH_HOLD))
         rh = 125. * rh  / 65536. - 6 #recalulated like in DS
         rh = max(0, min(100, rh)) #in edge cases results can be over the limit - this is a fix - see DS
+        ParameterStorage.provideValue(self.RELATIVE_HUMIDITY_PARAM_NAME,rh)
+        self.lastHumidityMeasurement=rh
         return rh
 
     def read(self):
@@ -97,7 +111,8 @@ class Si7021:
         """
         rh = self.readHumidity()
         t = self.readTemp(True)
-        
+        ParameterStorage.provideValue(self.TEMPERATURE_PARAM_NAME,t)
+        ParameterStorage.provideValue(self.RELATIVE_HUMIDITY_PARAM_NAME,rh)
         return (rh, t)
 
     @property
