@@ -16,19 +16,16 @@ def provideValue(paramName,value):
     if not paramName in parameters:
         print("Invalid parameter name")
         return None
-    results[paramName] = value    
-    print("Value "+str(value)+" provided for param name "+str(paramName))
-    print("res: " + str(len(results)) + " params: " + str(len(parameters)))    
+    results[paramName] = value     
     if len(results) == len(parameters):
         addToStack()
 
 def addToStack():
     global allMeasurements
     global results
-    allMeasurements[datetime.datetime.now()]= dict(results)
-    print("Added to stack")
+    allMeasurements[datetime.datetime.now()]= dict(results)    
     results.clear()
-    if len(allMeasurements)>1:
+    if len(allMeasurements)>120:
         dumpMeasurements()
 
 def dumpMeasurements():
