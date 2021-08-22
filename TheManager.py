@@ -5,65 +5,49 @@ import sys
 import Display
 import traceback
 import ParameterStorage
+import conditions
+from WhatToDoEnum import WhatToDo
+from threading import Thread
 
+counter = 0
+class TheManager(Thread):
+    disp = Display.Display(2,16)
+    instance = counter
+    controllerTurnRelaysOff()
 
-disp = Display.Display(2,16)
-controllerTurnRelaysOff()
+    def openWindow(self):
+        self.disp.displayTextLine("Otwieram okno!",True,2)
+        print("Opening the window")
+        controllerOpenWindow()
 
-def convertTimeToFloat(hrs, min):    
-    return float(hrs)+float(min)/60.0
+    def closeWindow(self):    
+        self.disp.displayTextLine("Zamykam okno!",True,2)
+        print("Closing the window")
+        controllerCloseWindow()
 
-def openWindow():
-    #global windowOpenedFlag
-    disp.displayTextLine("Otwieram okno!",True,2)
-    print("Opening the window")
-    #windowOpenedFlag = True
-    controllerOpenWindow()
-
-def closeWindow():
-    #global windowOpenedFlag
-    disp.displayTextLine("Zamykam okno!",True,2)
-    print("Closing the window")
-    #windowOpenedFlag = False
-    controllerCloseWindow()
-
-
-
-closingTime = convertTimeToFloat(23,00)
-openingTime = convertTimeToFloat(6,0)
-
-if closingTime<openingTime:
-    print("At the moment the window has to be opened earlier than being closed")
-    sys.exit()
-
-firstTime = True
-#windowOpenedFlag = False
-
-try:    
-    while True:
-        nowFull = datetime.now()        
-        now = convertTimeToFloat(nowFull.hour,nowFull.minute)
-        #text= str(nowFull.hour) +":" + ("0" if nowFull.minute<10 else "") + "{:02d}".format(str(nowFull.minute))        
-        if firstTime:
-            if now>=openingTime and now<closingTime:
-                openWindow()                
-            else:
-                closeWindow()
-            firstTime = False
-        else:
-            if now>=openingTime and now<closingTime and not isWindowOpen(): #windowOpenedFlag:
-                openWindow()                
-            elif now>=closingTime and isWindowOpen():#windowOpenedFlag:
-                closeWindow()
-        disp.displayInLoop(nowFull)
-        sleep(15)
-except Exception as e:
-    print(traceback.print_exc())
-    disp.displayTextLine("Program się wywalił.",True,0,8)
-    disp.displayTextLine("Zaloguj się na maszynę",False,8,8)
-    disp.displayTextLine("i sprawdź trace'a",False,16,8)
-finally:
-    ParameterStorage.dumpMeasurements()
+    def run(self) -> None: 
+        global counter
+        counter +=1
+        if self.instance>0:
+            print("Unnecesary invocation of TheManager")
+            return None
+        try:    
+            while True:
+                nowFull = datetime.now()        
+                toDo = conditions.canIclose(nowFull)
+                if toDo == WhatToDo.open:
+                    self.openWindow()
+                elif toDo == WhatToDo.close:
+                    self.closeWindow()
+                self.disp.displayInLoop(nowFull)
+                sleep(15)
+        except Exception as e:
+            print(traceback.print_exc())
+            self.disp.displayTextLine("Program się wywalił.",True,0,8)
+            self.disp.displayTextLine("Zaloguj się na maszynę",False,8,8)
+            self.disp.displayTextLine("i sprawdź trace'a",False,16,8)
+        finally:
+            ParameterStorage.dumpMeasurements()
 
 
 

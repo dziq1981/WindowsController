@@ -1,10 +1,14 @@
 import datetime
 from typing import Dict
 
+
 parameters = []
 results = {}
 firstUse = True
 allMeasurements = {}
+
+
+
 
 def addParameter(paramName):
     global parameters
@@ -28,13 +32,17 @@ def addToStack():
     if len(allMeasurements)>120:
         dumpMeasurements()
 
+def addCpuData():
+    global results
+    results["cpu load"] = "ff"
+
 def dumpMeasurements():
     global firstUse
     global allMeasurements
     global results
     saveStr = ""    
     if firstUse:
-        saveStr = "time;"
+        saveStr = "time;cpu load;cpu temp; gpu temp;"
         for s in parameters:
             saveStr+= s + ";"
         saveStr+="\n"
