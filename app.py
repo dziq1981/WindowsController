@@ -1,15 +1,22 @@
 from flask import Flask
 from TheManager import TheManager
 from WindowsController import isWindowOpen
+from ParameterStorage import getLastParams
 app = Flask(__name__)
 
 
 
 @app.route("/")
 def status():
-    str = "Obecny status:<br>"
-    str += "Okno obecnie jest " + ("otwarte" if isWindowOpen() else "zamknięte") + ".<br>"
-    return str
+    params = getLastParams()
+    retVal = "Obecny status:<br>"
+    keys = sorted(params.keys())    
+    for s in keys:
+        print(s)
+        retVal += s +": " + str(params[s]) + "<br>"
+    retVal += "Okno obecnie jest " + ("otwarte" if isWindowOpen() else "zamknięte") + ".<br>"
+    print(retVal)
+    return retVal
 
 
 windowManager = TheManager()

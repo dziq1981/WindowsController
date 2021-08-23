@@ -1,10 +1,8 @@
 from WindowsController import *
 from datetime import datetime
 from time import sleep
-import sys
 import Display
 import traceback
-import ParameterStorage
 import conditions
 from WhatToDoEnum import WhatToDo
 from threading import Thread
@@ -36,17 +34,20 @@ class TheManager(Thread):
                 nowFull = datetime.now()        
                 toDo = conditions.canIclose(nowFull)
                 if toDo == WhatToDo.open:
+                    #pass
                     self.openWindow()
                 elif toDo == WhatToDo.close:
                     self.closeWindow()
                 self.disp.displayInLoop(nowFull)
                 sleep(15)
+                #sleep(2)
         except Exception as e:
             print(traceback.print_exc())
             self.disp.displayTextLine("Program się wywalił.",True,0,8)
             self.disp.displayTextLine("Zaloguj się na maszynę",False,8,8)
             self.disp.displayTextLine("i sprawdź trace'a",False,16,8)
         finally:
+            #pass
             ParameterStorage.dumpMeasurements()
 
 

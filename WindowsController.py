@@ -7,7 +7,7 @@ relay2 = OutputDevice(5) #relay hooked on pin 5 - note that the relay is activat
 duration = 15 #how long should relays be switched on during opening/closing
 
 __isWindowOpen = False
-WINDOW_OPEN_PARAM_NAME = "is window open"
+WINDOW_OPEN_PARAM_NAME = "Okno otwarte"
 ParameterStorage.addParameter(WINDOW_OPEN_PARAM_NAME)
 
 

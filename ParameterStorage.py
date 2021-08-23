@@ -2,61 +2,71 @@ import datetime
 from typing import Dict
 
 
-parameters = []
-results = {}
-firstUse = True
-allMeasurements = {}
+__parameters = []
+__results = {}
+__firstUse = True
+__allMeasurements = {}
+
+lastFullParameters = {}
 
 
-
+def getLastParams() -> dict():
+    global lastFullParameters
+    return lastFullParameters
 
 def addParameter(paramName):
-    global parameters
-    parameters.append(paramName)
+    global __parameters
+    if not paramName in __parameters:
+        #print("+++++ PARAMETER " + paramName + "ADDED+++++")
+        __parameters.append(paramName)
 
 def provideValue(paramName,value):
-    global results
-    global parameters
-    if not paramName in parameters:
+    global __results
+    global __parameters
+    if not paramName in __parameters:
         print("Invalid parameter name")
         return None
-    results[paramName] = value     
-    if len(results) == len(parameters):
-        addToStack()
+    __results[paramName] = value  
+    #print ("results: " + str(len(__results)) + " params: " + str(len(__parameters)))   
+    if len(__results) == len(__parameters):
+        __addToStack()
 
-def addToStack():
-    global allMeasurements
-    global results
-    allMeasurements[datetime.datetime.now()]= dict(results)    
-    results.clear()
-    if len(allMeasurements)>120:
+def __addToStack():
+    global __allMeasurements
+    global __results
+    global lastFullParameters    
+    #print("adding to stack")
+    __allMeasurements[datetime.datetime.now()]= dict(__results)
+    lastFullParameters = dict(__results)
+    __results.clear()
+    if len(__allMeasurements)>360:
         dumpMeasurements()
 
-def addCpuData():
-    global results
-    results["cpu load"] = "ff"
+def __addCpuData():
+    global __results
+    __results["cpu load"] = "ff"
 
 def dumpMeasurements():
-    global firstUse
-    global allMeasurements
-    global results
+    global __firstUse
+    global __allMeasurements
+    global __results
     saveStr = ""    
-    if firstUse:
+    if __firstUse:
         saveStr = "time;cpu load;cpu temp; gpu temp;"
-        for s in parameters:
+        for s in __parameters:
             saveStr+= s + ";"
         saveStr+="\n"
-        firstUse=False
-    for key in allMeasurements.keys():
+        __firstUse=False
+    for key in __allMeasurements.keys():
         saveStr+=str(key)+";"
-        for s in parameters:
-            saveStr+=str(allMeasurements[key][s])+";"
+        for s in __parameters:
+            saveStr+=str(__allMeasurements[key][s])+";"
         saveStr+="\n"
 
     file = open("/windowManager/measurements.csv","a")    
     try:
         file.write(saveStr)
-        allMeasurements.clear()
+        __allMeasurements.clear()
         print("Data dumped")
     except:
         print("Write not possible")

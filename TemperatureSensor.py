@@ -35,8 +35,8 @@ class Si7021:
     lastTemperatureMeasurement =-100
     lastHumidityMeasurement = -100
 
-    TEMPERATURE_PARAM_NAME = " temperature"
-    RELATIVE_HUMIDITY_PARAM_NAME = "humidity"
+    TEMPERATURE_PARAM_NAME = "Temperatura"
+    RELATIVE_HUMIDITY_PARAM_NAME = "Wilgotność"
 
     def __init__(self):
         self.bus = smbus.SMBus(1)
