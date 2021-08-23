@@ -11,6 +11,7 @@ counter = 0
 class TheManager(Thread):
     disp = Display.Display(2,16)
     instance = counter
+    testing = False
     controllerTurnRelaysOff()
 
     def openWindow(self):
@@ -29,17 +30,21 @@ class TheManager(Thread):
         if self.instance>0:
             print("Unnecesary invocation of TheManager")
             return None
+
+        delay = 2 if self.testing else 15
         try:    
             while True:
-                nowFull = datetime.now()        
-                toDo = conditions.canIclose(nowFull)
+                nowFull = datetime.now() 
+                if self.testing:
+                    isWindowOpen()       
+                toDo = WhatToDo.doNothing if self.testing else conditions.canIclose(nowFull)                
                 if toDo == WhatToDo.open:
                     #pass
                     self.openWindow()
                 elif toDo == WhatToDo.close:
                     self.closeWindow()
                 self.disp.displayInLoop(nowFull)
-                sleep(15)
+                sleep(delay)
                 #sleep(2)
         except Exception as e:
             print(traceback.print_exc())
@@ -48,7 +53,8 @@ class TheManager(Thread):
             self.disp.displayTextLine("i sprawdź trace'a",False,16,8)
         finally:
             #pass
-            ParameterStorage.dumpMeasurements()
+            if not self.testing:
+                ParameterStorage.dumpMeasurements()
 
 
 

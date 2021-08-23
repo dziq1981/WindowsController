@@ -1,0 +1,7 @@
+{% extends "layout.html"%}
+{% block content %}
+    <h2> Obecny status:</h2>
+    {% for key in keys %}
+        <p>{{ key }}: {{% if params[key] is 'False' %}}Zamknięte {% else if params[key] is 'True'} Otwarte {% else %} {{ params[key] }} {% endif %} </p>
+    {% endfor %}
+{% endblock %}

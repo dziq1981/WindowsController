@@ -27,7 +27,7 @@ def provideValue(paramName,value):
         print("Invalid parameter name")
         return None
     __results[paramName] = value  
-    #print ("results: " + str(len(__results)) + " params: " + str(len(__parameters)))   
+    print ("results: " + str(len(__results)) + " params: " + str(len(__parameters)))   
     if len(__results) == len(__parameters):
         __addToStack()
 
