@@ -1,7 +1,12 @@
 {% extends "layout.html"%}
 {% block content %}
-    <h2> Obecny status:</h2>
-    {% for key in keys %}
-        <p>{{ key }}: {{% if params[key] is 'False' %}}Zamknięte {% else if params[key] is 'True'} Otwarte {% else %} {{ params[key] }} {% endif %} </p>
-    {% endfor %}
+
+    <h2 style="font-family: Arial, Helvetica, sans-serif;"> Obecny status:</h2>
+    <table>        
+        {% for param in params %}
+        <tr>
+            <th style="font-family: Arial, Helvetica, sans-serif;text-align: left;"> {{ param.name }}</th><th style="font-family: Arial, Helvetica, sans-serif;text-align: left;">: {{ param.value }}{{ param.unit }}</th>
+        </tr>
+        {% endfor %}        
+    </table>
 {% endblock %}

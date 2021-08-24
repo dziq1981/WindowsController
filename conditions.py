@@ -3,7 +3,7 @@ from time import sleep
 import WindowsController
 import datetime
 import TemperatureSensor
-from WhatToDoEnum import WhatToDo
+from Enums import WhatToDo, isWindow
 import threading
 
 firstTime = True
@@ -55,7 +55,7 @@ def canIclose(now) -> WhatToDo:
         else:
             return WhatToDo.close if (nowf<weekendOpeningTime or nowf>weekendClosingTime or tooCold) and not tooHumid else WhatToDo.open
 
-    isWindowOpen = WindowsController.isWindowOpen()
+    isWindowOpen = WindowsController.isWindowOpen()==isWindow.open
     
     if isWindowOpen and userClosingTrigger:
         userClosingTrigger = False

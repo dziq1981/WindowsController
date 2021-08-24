@@ -4,7 +4,7 @@ from time import sleep
 import Display
 import traceback
 import conditions
-from WhatToDoEnum import WhatToDo
+from Enums import WhatToDo
 from threading import Thread
 
 counter = 0

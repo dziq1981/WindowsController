@@ -41,8 +41,8 @@ class Si7021:
     def __init__(self):
         self.bus = smbus.SMBus(1)
         self.addr = 0x40
-        ParameterStorage.addParameter(self.TEMPERATURE_PARAM_NAME)
-        ParameterStorage.addParameter(self.RELATIVE_HUMIDITY_PARAM_NAME)
+        ParameterStorage.addParameter(self.TEMPERATURE_PARAM_NAME,"°C")
+        ParameterStorage.addParameter(self.RELATIVE_HUMIDITY_PARAM_NAME,"%")
     
     def persistentBusRead(self, registerAddr, loops=50):
         """ Tries to read from the I2C bus as many times as defined - tries again if exception is raised """

@@ -55,7 +55,7 @@ class Display():
 
     def displayTimeString(self,time2Display):    
         text= "{:02d}".format(time2Display.hour) +":" + "{:02d}".format(time2Display.minute)
-        print(text)
+        #print(text)
         self.displayTextLine(text,True,self.currentLine,20)
         self.currentLine+=2
         if self.currentLine>=self.maxLine:
@@ -67,19 +67,19 @@ class Display():
         newString = newString.replace("b'","")
         newString = newString.replace("\\n'","")
         newString = newString.replace("'","")
-        print(newString)
+        #print(newString)
         return newString
 
     def displayTemperature(self):
         temp = self.sensor.readTemp()        
         txt = f"{temp:.1f}°C"
-        print(txt)
+        #print(txt)
         self.displayTextLine(txt,True,10,20)
 
     def displayhumidity(self):
         hum = self.sensor.readHumidity()
         txt = f"{hum:.1f}%"
-        print(txt)
+        #print(txt)
         self.displayTextLine(txt,True,10,20)
 
 

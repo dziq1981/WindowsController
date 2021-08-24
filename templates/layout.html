@@ -10,13 +10,27 @@
 
     <title> {{ title }}</title>
   </head>
+  <style>
+    .center {
+      margin: 10;
+      position: absolute;
+      bottom: 65px;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+  </style>
   <body style="background-color:rgb(29, 29, 29);">  
       <div style="background-color: black;height: 50px;"> dd</div>
       <div class="container" style="background-color: rgb(189, 189, 189);height:100%; margin:5%">
-        <h1 style="margin: 10px;background-color:rgb(95, 95, 95);text-justify: center;color: whitesmoke;text-align: center;">The Window Manager</h1>    
+        <h1 style="margin: 10px;background-color:rgb(95, 95, 95);text-justify: center;color: whitesmoke;text-align: center; font-family: Arial, Helvetica, sans-serif;">The Window Manager</h1>    
         <br>
         {% block content %}{% endblock content%}
       </div>
+      <div class="center">
+        <a href="/open"><button type="button" class="btn btn-primary" style="height: 10mm;width: 23mm; background-color: black;"><div style="color: rgb(85, 85, 85); font-size: 4mm;">OTWÓRZ</div></button></a>
+        <a href="/close"><button type="button" class="btn btn-primary" style="height: 10mm;width: 23mm; background-color: black;"><div style="color: rgb(85, 85, 85); font-size: 4mm;">ZAMKNIJ</div></button></a>
+      </div>  
       <div style="background-color: black;height: 50px;width:100%;position:fixed;bottom:0;" > dd</div>
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>

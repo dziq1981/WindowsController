@@ -2,7 +2,7 @@ import datetime
 from typing import Dict
 
 
-__parameters = []
+__parameters = {}
 __results = {}
 __firstUse = True
 __allMeasurements = {}
@@ -14,16 +14,20 @@ def getLastParams() -> dict():
     global lastFullParameters
     return lastFullParameters
 
-def addParameter(paramName):
+def addParameter(paramName, paramUnit):
     global __parameters
-    if not paramName in __parameters:
+    if not paramName in __parameters.keys():
         #print("+++++ PARAMETER " + paramName + "ADDED+++++")
-        __parameters.append(paramName)
+        __parameters[paramName]=paramUnit
+
+def getUnit(paramName) ->str:
+    global __parameters
+    return __parameters[paramName]
 
 def provideValue(paramName,value):
     global __results
     global __parameters
-    if not paramName in __parameters:
+    if not paramName in __parameters.keys():
         print("Invalid parameter name")
         return None
     __results[paramName] = value  
