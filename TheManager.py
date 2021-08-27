@@ -4,7 +4,7 @@ from time import sleep
 import Display
 import traceback
 import conditions
-from Enums import WhatToDo
+from Enums import whatToDo
 from threading import Thread
 
 counter = 0
@@ -31,20 +31,25 @@ class TheManager(Thread):
             print("Unnecesary invocation of TheManager")
             return None
 
-        delay = 2 if self.testing else 15
-        try:    
+        iterationCount=0
+        displayDelay = 2 if self.testing else 15
+        try:                
             while True:
+                iterationCount+=1
                 nowFull = datetime.now() 
                 if self.testing:
                     isWindowOpen()       
-                toDo = WhatToDo.doNothing if self.testing else conditions.canIclose(nowFull)                
-                if toDo == WhatToDo.open:
-                    #pass
+                toDo = whatToDo.doNothing if self.testing else conditions.canIclose(nowFull)                
+                if toDo == whatToDo.open:
                     self.openWindow()
-                elif toDo == WhatToDo.close:
+                elif toDo == whatToDo.close:
                     self.closeWindow()
-                self.disp.displayInLoop(nowFull)
-                sleep(delay)
+
+                if iterationCount>=displayDelay:                    
+                    iterationCount=0
+                    self.disp.displayInLoop(nowFull)
+                
+                sleep(2)
                 #sleep(2)
         except Exception as e:
             print(traceback.print_exc())

@@ -1,10 +1,10 @@
 from flask.wrappers import Request
-from Enums import isWindow
-from flask import Flask, render_template
+from Enums import isWindow, settingNames, settingType
+from flask import Flask, render_template, redirect
 from TheManager import TheManager
 #from WindowsController import isWindowOpen
 from ParameterStorage import getLastParams, getUnit
-import conditions
+import conditions, math
 app = Flask(__name__)
 
 
@@ -34,23 +34,41 @@ def status():
             'unit' : getUnit(k)
             }
         newParams.append(singleParam)        
-    #    retVal += s +": " + str(params[s]) + "<br>"
-    #retVal += "Okno obecnie jest " + ("otwarte" if isWindowOpen() else "zamknięte") + ".<br>"
-    #print(retVal)
-    return render_template("home.html", title = "Window Manager Status Page", params = newParams)
+    return render_template("home.html", title = "Windows Commander - panel statusu", params = newParams)
 
 @app.route("/open")
 def openWindow():
     conditions.userOpeningTrigger = True
     print("User opening")
-    return status()
+    return redirect("/")
 
 @app.route("/close")
 def closeWindow():
     conditions.userClosingTrigger = True
-    print("User closing")
-    return status()
+    print("User closing")    
+    return redirect("/")
 
+@app.route("/settings")
+def settings():    
+    print("Settings") 
+    settings = conditions.getSettings()   
+    newSettings=[]
+    for setting in settings:
+        name = str(setting["name"])
+        v = setting["value"]
+        t = setting["type"]
+        val = str
+        if t==settingType.bool:
+            val = "Włączone" if v else "Wyłączone"
+        elif t==settingType.floatH or t==settingType.floatT:
+                u =  "°C" if t==settingType.floatT else "%"
+                val = f"{v:.2f}{u}"
+        elif t==settingType.floatHr:
+            d,i = math.modf(v)
+            mins = d*60
+            val = f"{int(i):02}:{int(mins):02}"
+        newSettings.append({"name" : name, "value" : val})
+    return render_template("settings.html", title = "Windows Commander - panel ustawień", params = newSettings)
 
 windowManager = TheManager()
 #windowManager.testing=True

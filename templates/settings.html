@@ -1,0 +1,12 @@
+{% extends "layout.html"%}
+{% block content %}
+
+    <h2 style="font-family: Arial, Helvetica, sans-serif;"> Panel ustawień:</h2>
+    <table>        
+        {% for param in params %}
+        <tr>
+            <th style="font-family: Arial, Helvetica, sans-serif;text-align: left;"> {{ param.name }}</th><th style="font-family: Arial, Helvetica, sans-serif;text-align: left;">: {{ param.value }}</th>
+        </tr>
+        {% endfor %}        
+    </table>
+{% endblock %}
