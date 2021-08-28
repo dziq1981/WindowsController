@@ -1,83 +1,99 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title> {{ title }}</title>
-  </head>
-  <style>
-    .center {
-      margin: 10;
-      position: absolute;
-      bottom: 5%;
-      left: 50%;
-      -ms-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
-      overflow-x: auto;
-      
-    }
-    .topFont
-    {
-      font-size: 20px;
-      color: aliceblue;
-      font-weight: 700;
-      font-family: Arial, Helvetica, sans-serif;
-      text-decoration: none;
-    }
-    .bottomFont
-    {
-      font-size: 12pt;
-      color: rgb(86, 86, 87);      
-      font-family: Arial, Helvetica, sans-serif;
-      text-decoration: none;
-      position: absolute;
-      left:50%;
-      -ms-transform: translate(-50%,15%);
-      transform: translate(-50%,15%);
-    }
-    .button
-    {
-      height: 50px;
-      width: 125px; 
-      background-color: rgb(255, 255, 255);
-      color: black;
-      font-weight: bolder;
-      font-size: 4mm;
-      border-radius: 15px;
-      display: inline-block;
-    }
-    .blackBelt
-    {
-      background-color: black;
-      height: 7%; 
-      width: 100%;
-    }
-  </style>
-  <body style="background-color:rgb(29, 29, 29);">  
-      <div class="blackBelt" style="position: fixed; top:0%">
-        <div class = "topFont">Menu:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a class="topFont" href="/home">Status</a>&nbsp&nbsp&nbsp<a class="topFont" href="/settings">Ustawienia</a></div>
-          
-      </div>
-      <div style="background-color: rgb(189, 189, 189);height:80%; width: 75%; margin:1%; position:absolute; left: 50%;
-      -ms-transform: translate(-50%,25px);transform: translate(-50%,25px);border-radius: 20px;">
-        <h1 style="margin: 10px;background-color:rgb(95, 95, 95);text-justify: center;color: whitesmoke;text-align: center; font-family: Arial, Helvetica, sans-serif;border-radius: 10px;">Windows Commander</h1>    
-        <br>
-        <div style="margin: 20px;">
-          {% block content %}{% endblock content%}
-        </div>
-      </div>
-      <div class="center">
-        <a href="/open"><button type="button" class="button">OTWÓRZ</button></a>&nbsp<a href="/close"><button type="button" class="button">ZAMKNIJ</div></button></a>
-      </div>  
-      <div class= "blackBelt" style="position:fixed;bottom:0; white-space: nowrap;" ><div class="bottomFont">Copyrights 2021 by Szymon Grześko</div></div>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
-  </body>
+  <title> {{ title }}</title>
+</head>
+<style>
+  .center {
+    margin: 10;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    overflow-x: auto;
+
+  }
+
+  .topFont {
+    font-size: 20px;
+    color: aliceblue;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    margin-left: 10px;
+
+  }
+
+  .bottomFont {
+    font-size: 12pt;
+    color: rgb(86, 86, 87);
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, 15px);
+    transform: translate(-50%, 15px);
+  }
+
+  .button {
+    height: 50px;
+    width: 125px;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    font-weight: bolder;
+    font-size: 4mm;
+    border-radius: 15px;
+    display: inline-block;
+  }
+
+  .blackBelt {
+    background-color: black;
+    height: 50px;
+    width: 100%;
+    margin:0%;
+  }
+</style>
+
+<body style="background-color:rgb(29, 29, 29);">
+  <div class="blackBelt" style="position: fixed; top:0">
+    <div style="position: fixed; left:50%; display: inline-block;-ms-transform: translate(-50%, 0%);transform: translate(-50%, 0%);"><a class="topFont" href="/home">Status</a>&nbsp&nbsp&nbsp<a
+        class="topFont" href="/settings">Ustawienia</a></div>
+
+  </div>
+  <div style="background-color: rgb(189, 189, 189); width: 75%; position:absolute; left: 50%; top:10px; bottom: 135px;
+      -ms-transform: translate(-50%,25px);transform: translate(-50%,25px);border-radius: 20px; text-overflow: clip;">
+    <h1
+      style="margin: 10px;background-color:rgb(95, 95, 95);text-justify: center;color: whitesmoke;text-align: center; font-family: Arial, Helvetica, sans-serif;border-radius: 10px;">
+      Windows Commander</h1>
+    <br>
+    <div style="position: absolute;top:85px;bottom: 10px; margin-left: 15px; margin-right: 15px; overflow-y: auto;">
+      {% block content %}{% endblock content%}
+    </div>
+  </div>
+  <div class="center">
+    <a href="/open"><button type="button" class="button">OTWÓRZ<br>OKNO</button></a>&nbsp<a href="/close"><button type="button"
+        class="button">ZAMKNIJ<br>OKNO
+  </div></button></a>
+  </div>
+  <div class="blackBelt" style="position:fixed;bottom:0; white-space: nowrap;">
+    <div class="bottomFont">Copyrights 2021 by Szymon Grześko</div>
+  </div>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+    crossorigin="anonymous"></script>
+
+</body>
+
 </html>
