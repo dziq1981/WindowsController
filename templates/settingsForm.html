@@ -1,0 +1,45 @@
+{% extends "layout.html"%}
+{% block content %}
+
+    <h2 style="font-family: Arial, Helvetica, sans-serif;"> Panel ustawień:</h2>
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class = "form-group">
+                    {{ form.manualOverride.label(class="form-control-label") }}&nbsp;&nbsp;&nbsp;
+                    {{ form.manualOverride(class="form-check-input") }}
+                </div>
+                <div class = "form-group">
+                    {{ form.weekendOpeningTime.label(class="form-control-label") }} 
+                    {{ form.weekendOpeningTime(class="form-control form-control-lg") }}
+                </div>
+                <div class = "form-group">
+                    {{ form.weekendClosingTime.label(class="form-control-label") }}
+                    {{ form.weekendClosingTime(class="form-control form-control-lg") }}
+                </div>
+                <div class = "form-group">
+                    {{ form.weekdayOpeningTime.label(class="form-control-label") }}
+                    {{ form.weekdayOpeningTime(class="form-control form-control-lg") }}
+                </div>
+                <div class = "form-group">
+                    {{ form.weekdayClosingTime.label(class="form-control-label") }}
+                    {{ form.weekdayClosingTime(class="form-control form-control-lg") }}
+                </div>
+                <div class = "form-group">                    
+                    {{ form.closeBelowThisTemp.label(class="form-control-label") }}                    
+                    {{ form.closeBelowThisTemp(class="form-control form-control-lg") }}
+                    
+                </div>
+                <div class = "form-group">
+                    {{ form.openAboveThisHumidity.label(class="form-control-label") }}
+                    {{ form.openAboveThisHumidity(class="form-control form-control-lg") }}
+                </div>
+            </fieldset>
+            <div class = "form-group">
+                {{ form.submit( class="button") }}
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

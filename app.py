@@ -2,11 +2,12 @@ from flask.wrappers import Request
 from Enums import isWindow, settingNames, settingType
 from flask import Flask, render_template, redirect
 from TheManager import TheManager
-#from WindowsController import isWindowOpen
 from ParameterStorage import getLastParams, getUnit
 import conditions, math
-app = Flask(__name__)
+from FormsSettings import SettingsForm
 
+app = Flask(__name__)
+app.config["SECRET_KEY"]="34fgsdg2aqsgf2938q248y7eb2WEGAQ23"
 
 @app.route("/home")
 @app.route("/")
@@ -14,7 +15,6 @@ def status():
     params = getLastParams()
     keys = sorted(params.keys())    
     newParams = []
-    print(type(0.01))
     for key in keys:        
         k = str(key)
         v = params[key]
@@ -69,6 +69,20 @@ def settings():
             val = f"{int(i):02}:{int(mins):02}"
         newSettings.append({"name" : name, "value" : val})
     return render_template("settings.html", title = "Windows Commander - panel ustawień", params = newSettings)
+
+@app.route("/settingsChange", methods=["POST","GET"])
+def settingsChange():    
+    form = SettingsForm()
+    if form.validate_on_submit():
+        conditions.manualOverride = form.manualOverride.data
+        conditions.closeBelowThisTemp = float(conditions.getRidOfGarbage(form.closeBelowThisTemp.data))
+        conditions.openAboveThisHumidity = float(conditions.getRidOfGarbage(form.openAboveThisHumidity.data))
+        conditions.weekdayClosingTime = conditions.convertStringToTimeFloat(form.weekdayClosingTime.data)
+        conditions.weekendClosingTime = conditions.convertStringToTimeFloat(form.weekendClosingTime.data)
+        conditions.weekdayOpeningTime = conditions.convertStringToTimeFloat(form.weekdayOpeningTime.data)
+        conditions.weekendOpeningTime = conditions.convertStringToTimeFloat(form.weekendOpeningTime.data)
+        return redirect("/settings")
+    return render_template("settingsForm.html", title = "Windows Commander - panel ustawień", form = form)
 
 windowManager = TheManager()
 #windowManager.testing=True

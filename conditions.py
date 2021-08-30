@@ -9,6 +9,22 @@ import threading
 def convertTimeToFloat(hrs, min):    
     return float(hrs)+float(min)/60.0
 
+def convertStringToTimeFloat(timeString):
+    strFromParam = getRidOfGarbage(timeString)
+    strList = strFromParam.split(":")
+    print (f"1. {strList[0]} and 2. {strList[1]}")
+    hrs = float(strList[0])
+    mins = float(strList[1])/60.0
+    return hrs+mins
+
+def getRidOfGarbage(timeString):
+    print(timeString)
+    strFromParam = str(timeString)
+    strFromParam= strFromParam.replace("[","")
+    strFromParam= strFromParam.replace("]","")
+    strFromParam= strFromParam.replace("'","")
+    return strFromParam
+
 class Ticker(threading.Thread):
     running = False   
     sleepTime = 1800  
