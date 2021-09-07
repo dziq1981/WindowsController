@@ -126,23 +126,50 @@ def setSettings(settings):
     for setting in settings:
         n = setting["name"]
         v = setting["value"]
-        if n==settingNames.manualOverride:
+        if n==settingNames.manualOverride.value:
             manualOverride = v=="True"
-        elif n==settingNames.weekendOpeningTime:
+            print(f"Setting {n} to {v}")
+        elif n==settingNames.weekendOpeningTime.value:
             weekendOpeningTime = float(v)
-        elif n==settingNames.weekendClosingTime:
+            print(f"Setting {n} to {v}")
+        elif n==settingNames.weekendClosingTime.value:            
             weekendClosingTime = float(v)
-        elif n==settingNames.weekdayOpeningTime:
+            print(f"Setting {n} to {v}")
+        elif n==settingNames.weekdayOpeningTime.value:
             weekdayOpeningTime = float(v)
-        elif n==settingNames.weekdayClosingTime:
+            print(f"Setting {n} to {v}")
+        elif n==settingNames.weekdayClosingTime.value:
             weekdayClosingTime = float(v)
-        elif n==settingNames.closeBelowThisTemp:
+            print(f"Setting {n} to {v}")
+        elif n==settingNames.closeBelowThisTemp.value:
             closeBelowThisTemp = float(v)
-        elif n==settingNames.openAboveThisHumidity:
+            print(f"Setting {n} to {v}")
+        elif n==settingNames.openAboveThisHumidity.value:
             openAboveThisHumidity = float(v)
-        pass
+            print(f"Setting {n} to {v}")        
 
+def saveSettings():
+    file = open("settings.cfg","w+t")
+    strng = ""
+    for setting in getSettings():
+        strng+=setting["name"] + "=" + str(setting["value"])+"\n"
+    try:      
+        file.write(strng)
+    finally:
+        file.close()
 
+def loadSettings():
+    file = open("settings.cfg","r+t")
+    strng = []
+    settings = []
+    try:
+        strng = file.readlines()
+    finally:
+        file.close()
+    for s in strng:
+        ss=s.replace("\n","").split("=")        
+        settings.append(__generateSetting(ss[0],ss[1],None))
+    setSettings(settings)
 
 
 firstTime = True
@@ -166,3 +193,5 @@ tickTack.sleepTime=1800
 lastSensorRead = datetime.datetime.now()
 tooCold = False
 tooHumid = False
+
+loadSettings()

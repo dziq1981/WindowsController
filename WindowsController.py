@@ -26,7 +26,7 @@ def controllerOpenWindow():
     try:
         relay2.off()
         relay1.on()
-        sleep(duration)
+        sleep(duration-2)
         __isWindowOpen=isWindow.open
     finally:
         controllerTurnRelaysOff()

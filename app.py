@@ -81,6 +81,7 @@ def settingsChange():
         conditions.weekendClosingTime = conditions.convertStringToTimeFloat(form.weekendClosingTime.data)
         conditions.weekdayOpeningTime = conditions.convertStringToTimeFloat(form.weekdayOpeningTime.data)
         conditions.weekendOpeningTime = conditions.convertStringToTimeFloat(form.weekendOpeningTime.data)
+        conditions.saveSettings()
         return redirect("/settings")
     return render_template("settingsForm.html", title = "Windows Commander - panel ustawień", form = form)
 

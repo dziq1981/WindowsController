@@ -1,4 +1,5 @@
 import datetime
+import os.path
 from typing import Dict
 
 
@@ -56,8 +57,10 @@ def dumpMeasurements():
     global __allMeasurements
     global __results
     saveStr = ""    
+    filePath = "/windowManager/measurements.csv"
+    __firstUse = not os.path.isfile(filePath)
     if __firstUse:
-        saveStr = "time;cpu load;cpu temp; gpu temp;"
+        saveStr = "time;" #"time;cpu load;cpu temp; gpu temp;"
         for s in __parameters:
             saveStr+= s + ";"
         saveStr+="\n"
@@ -67,8 +70,8 @@ def dumpMeasurements():
         for s in __parameters:
             saveStr+=str(__allMeasurements[key][s])+";"
         saveStr+="\n"
-
-    file = open("/windowManager/measurements.csv","a")    
+    
+    file = open(filePath,"a")    
     try:
         file.write(saveStr)
         __allMeasurements.clear()
