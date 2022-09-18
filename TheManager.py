@@ -32,7 +32,7 @@ class TheManager(Thread):
             return None
 
         iterationCount=0
-        displayDelay = 2 if self.testing else 15
+        displayDelay = 2 if self.testing else 5
         try:                
             while True:
                 iterationCount+=1
@@ -43,12 +43,13 @@ class TheManager(Thread):
                 if toDo == whatToDo.open:
                     self.openWindow()
                 elif toDo == whatToDo.close:
-                    self.closeWindow()
-
+                    self.closeWindow()                
                 if iterationCount>=displayDelay:                    
                     iterationCount=0
-                    self.disp.displayInLoop(nowFull)
-                
+                    try:
+                        self.disp.displayInLoop(nowFull)
+                    except Exception as ex:
+                        print(traceback.print_exc())        
                 sleep(2)
                 #sleep(2)
         except Exception as e:

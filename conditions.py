@@ -40,12 +40,12 @@ class Ticker(threading.Thread):
         self.running = False        
 
 def canIclose(now) -> whatToDo:    
-    global firstTime, userClosingTrigger, userOpeningTrigger, manualOverride, lastSensorRead,tooCold,tooHumid
+    global firstTime, userClosingTrigger, userOpeningTrigger, manualOverride, lastSensorRead,tooCold,tooHumid, tickTack
     nowf = convertTimeToFloat(now.hour,now.minute)
     isItWeekday = datetime.datetime.now().isoweekday()<=5
     if (now>lastSensorRead+datetime.timedelta(minutes=1) or firstTime): #read it no frequent than once per minute - those changes are not that rapid
         tooCold = sensor.readTemp()<closeBelowThisTemp
-        tooHumid = sensor.readHumidity()>openAboveThisHumidity
+        tooHumid = False #sensor.readHumidity()>openAboveThisHumidity
         lastSensorRead = now
 
     if firstTime:
@@ -70,14 +70,20 @@ def canIclose(now) -> whatToDo:
 
     if not manualOverride:
         if isWindowOpen and tooCold:
-            tickTack.start()
+            if not tickTack.running:
+                tickTack= Ticker()
+                tickTack.start()
             return whatToDo.close
         elif not isWindowOpen and tooCold:
-            tickTack.start()
+            if not tickTack.running:
+                tickTack= Ticker()
+                tickTack.start()
             return whatToDo.doNothing
-        elif not isWindowOpen and tooHumid:
-            tickTack.start()
-            return whatToDo.open
+        #elif not isWindowOpen and tooHumid:
+        #    if not tickTack.running:
+        #        tickTack= Ticker()
+        #        tickTack.start()
+        #    return whatToDo.open
     
     retVal = closeCondition(nowf, weekdayOpeningTime if isItWeekday else weekendOpeningTime,
         weekdayClosingTime if isItWeekday else weekendClosingTime)
@@ -102,8 +108,8 @@ def closeCondition(nowf, openingTime, closingTime)->whatToDo:
     tempHumidCondition = bool
     if tooCold:
         tempHumidCondition = True
-    elif tooHumid:
-        tempHumidCondition = False
+    #elif tooHumid:
+    #    tempHumidCondition = False
     return whatToDo.close if closingTime and tempHumidCondition else whatToDo.open
 
 def getSettings():

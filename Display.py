@@ -46,12 +46,15 @@ class Display():
 
     def displayTextLine(self, text, clearScreen, lineNumber, fontsize=8):
         font = ImageFont.truetype('Super Mario Bros. 2.ttf', fontsize)
-        if clearScreen:
-            self.draw.rectangle((0,0,self.width,self.height), outline=0, fill=0)
-        self.draw.text((self.x, self.top+lineNumber), text,  font=font, fill=255)
-        
-        self.disp.image(self.image)
-        self.disp.display()
+        try:
+            if clearScreen:
+                self.draw.rectangle((0,0,self.width,self.height), outline=0, fill=0)
+            self.draw.text((self.x, self.top+lineNumber), text,  font=font, fill=255)
+            
+            self.disp.image(self.image)
+            self.disp.display()
+        except:
+            print('Screen update failed')
 
     def displayTimeString(self,time2Display):    
         text= "{:02d}".format(time2Display.hour) +":" + "{:02d}".format(time2Display.minute)
