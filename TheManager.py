@@ -1,28 +1,52 @@
-from WindowsController import *
+from tkinter import E
+import WindowsController 
 from datetime import datetime
 from time import sleep
 import Display
 import traceback
 import conditions
+import ParameterStorage
 from Enums import whatToDo
 from threading import Thread
+from Enums import isWindow
 
 counter = 0
 class TheManager(Thread):
     disp = Display.Display(2,16)
     instance = counter
     testing = False
-    controllerTurnRelaysOff()
+    WindowsController.controllerTurnRelaysOff()
+    markerDirectory = "/windowManager/marker/"
+
+    def createMarker(self, state: isWindow):        
+        name = ""
+        name += self.markerDirectory
+        if state == isWindow.open:
+            name+="open"
+        elif state == isWindow.close:
+            name+="close"
+        else:
+            return
+        name+=str(datetime.timestamp(datetime.now()))
+        print(name)
+        try:
+            open(name, mode='a')
+        except OSError:
+            print("Marker creation failed")
+
 
     def openWindow(self):
         self.disp.displayTextLine("Otwieram okno!",True,2)
         print("Opening the window")
-        controllerOpenWindow()
+        WindowsController.controllerOpenWindow()
+        self.createMarker(isWindow.open)
+        
 
     def closeWindow(self):    
         self.disp.displayTextLine("Zamykam okno!",True,2)
         print("Closing the window")
-        controllerCloseWindow()
+        WindowsController.controllerCloseWindow()
+        self.createMarker(isWindow.close)
 
     def run(self) -> None: 
         global counter
@@ -38,7 +62,7 @@ class TheManager(Thread):
                 iterationCount+=1
                 nowFull = datetime.now() 
                 if self.testing:
-                    isWindowOpen()       
+                    WindowsController.isWindowOpen()
                 toDo = whatToDo.doNothing if self.testing else conditions.canIclose(nowFull)                
                 if toDo == whatToDo.open:
                     self.openWindow()

@@ -47,6 +47,8 @@ def canIclose(now) -> whatToDo:
         tooCold = sensor.readTemp()<closeBelowThisTemp
         tooHumid = False #sensor.readHumidity()>openAboveThisHumidity
         lastSensorRead = now
+    if firstTime and WindowsController.isWindowOpen() != isWindow.unknown:
+        firstTime = False
 
     if firstTime:
         firstTime=False
