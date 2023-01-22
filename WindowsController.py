@@ -21,10 +21,10 @@ def readMarker()-> isWindow:
         list_of_files = glob(TheManager.TheManager.markerDirectory+"*")
         latest_file = max(list_of_files, key=path.getctime)
         print(latest_file)
-        if latest_file.find("open")>0:
+        if latest_file.find("open")>=0:
             print("I think the window is currently OPEN")
             return isWindow.open
-        elif latest_file.find("close")>0:
+        elif latest_file.find("close")>=0:
             print("I think the window is currently CLOSED")
             return isWindow.close
     except:

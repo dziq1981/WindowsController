@@ -2,7 +2,7 @@ from os import close
 from time import sleep
 import WindowsController
 import datetime
-import BME280 #TemperatureSensor
+import TemperatureSensor
 from Enums import whatToDo, isWindow, settingNames, settingType
 import threading
 
@@ -44,12 +44,9 @@ def canIclose(now) -> whatToDo:
     nowf = convertTimeToFloat(now.hour,now.minute)
     isItWeekday = datetime.datetime.now().isoweekday()<=5
     if (now>lastSensorRead+datetime.timedelta(minutes=1) or firstTime): #read it no frequent than once per minute - those changes are not that rapid
-        sensor.values()
-        tooCold = sensor.lastTemperatureMeasurement<closeBelowThisTemp
-        tooHumid = False #sensor.readHumidity()>openAboveThisHumidity
+        tooCold = sensor.readTemp()<closeBelowThisTemp
+        #tooHumid = sensor.readHumidity()>openAboveThisHumidity
         lastSensorRead = now
-    if firstTime and WindowsController.isWindowOpen() != isWindow.unknown:
-        firstTime = False
 
     if firstTime:
         firstTime=False
@@ -111,8 +108,8 @@ def closeCondition(nowf, openingTime, closingTime)->whatToDo:
     tempHumidCondition = bool
     if tooCold:
         tempHumidCondition = True
-    #elif tooHumid:
-    #    tempHumidCondition = False
+    elif tooHumid:
+        tempHumidCondition = False
     return whatToDo.close if closingTime and tempHumidCondition else whatToDo.open
 
 def getSettings():
@@ -197,7 +194,7 @@ userClosingTrigger = False
 userOpeningTrigger = False
 
 tickTack = Ticker()
-sensor = BME280.BME280(bus=1,address=0x76)#TemperatureSensor.Si7021()
+sensor = TemperatureSensor.Si7021()
 tickTack.sleepTime=1800
 lastSensorRead = datetime.datetime.now()
 tooCold = False

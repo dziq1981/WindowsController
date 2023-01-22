@@ -56,7 +56,7 @@ class TheManager(Thread):
             return None
 
         iterationCount=0
-        displayDelay = 2 if self.testing else 5
+        displayDelay = 2 if self.testing else 2
         try:                
             while True:
                 iterationCount+=1
