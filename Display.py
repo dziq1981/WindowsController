@@ -3,13 +3,13 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import subprocess
-import BME280 #TemperatureSensor
+#import BME280 #TemperatureSensor
 
 
 class Display():
     RST = None 
     disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)    
-    sensor = BME280.BME280()#TemperatureSensor.Si7021()
+    #sensor = BME280.BME280()#TemperatureSensor.Si7021()
     # Initialize library.
     disp.begin()
 
@@ -74,23 +74,23 @@ class Display():
         return newString
 
     def displayTemperature(self):
-        temp = self.sensor.readTemp()        
+        temp = -100#self.sensor.readTemp()        
         txt = f"{temp:.1f}°C"
         #print(txt)
         self.displayTextLine(txt,True,10,20)
 
     def displayhumidity(self):
-        hum = self.sensor.readHumidity()
+        hum = -100#self.sensor.readHumidity()
         txt = f"{hum:.1f}%"
         #print(txt)
         self.displayTextLine(txt,True,10,20)
 
     def displaySensorData(self):
-        tempC, presPa, humRH = self.sensor.values() # read all data from the sensor
+        tempC, presPa, humRH = -100,-100,-100#self.sensor.values() # read all data from the sensor
         pres_hPa = presPa / 100 # convert air pressurr Pascals -> hPa (or mbar, if you prefer)
-        txtT = f"{tempC:.1f}°C"
-        txtH = f"{humRH:.1f}%"
-        txtP = f"{pres_hPa:.1f}hPa"
+        txtT = f"{tempC:.1f} °C"
+        txtH = f"{humRH:.1f} %"
+        txtP = f"{pres_hPa:.1f} hPa"
         font = ImageFont.truetype('Super Mario Bros. 2.ttf', 9)
         self.draw.rectangle((0,0,self.width,self.height), outline=0, fill=0)
         self.draw.text((self.x, self.top+2), txtT,  font=font, fill=255)

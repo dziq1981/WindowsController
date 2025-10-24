@@ -147,7 +147,7 @@ class BME280:
         new_press = pres/256
         ParameterStorage.provideValue(self.TEMPERATURE_PARAM_NAME,new_temp)        
         ParameterStorage.provideValue(self.RELATIVE_HUMIDITY_PARAM_NAME,new_humi)        
-        ParameterStorage.provideValue(self.PRESSURE_PARAM_NAME,new_press)
+        ParameterStorage.provideValue(self.PRESSURE_PARAM_NAME,new_press/100)
         self.lastTemperatureMeasurement=new_temp
         self.lastHumidityMeasurement=new_humi
         self.lastPressureMeasurement=new_press
