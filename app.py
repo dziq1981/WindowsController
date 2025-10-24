@@ -76,7 +76,7 @@ def settingsChange():
     if form.validate_on_submit():
         conditions.manualOverride = form.manualOverride.data
         conditions.closeBelowThisTemp = float(conditions.getRidOfGarbage(form.closeBelowThisTemp.data))
-        conditions.openAboveThisHumidity = float(conditions.getRidOfGarbage(form.openAboveThisHumidity.data))
+        conditions.openAboveThisCO2 = float(conditions.getRidOfGarbage(form.openAboveThisHumidity.data))
         conditions.weekdayClosingTime = conditions.convertStringToTimeFloat(form.weekdayClosingTime.data)
         conditions.weekendClosingTime = conditions.convertStringToTimeFloat(form.weekendClosingTime.data)
         conditions.weekdayOpeningTime = conditions.convertStringToTimeFloat(form.weekdayOpeningTime.data)

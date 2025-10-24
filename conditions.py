@@ -2,9 +2,10 @@ from os import close
 from time import sleep
 import WindowsController
 import datetime
-import BME280 #TemperatureSensor
+#import BME280 #TemperatureSensor
 from Enums import whatToDo, isWindow, settingNames, settingType
 import threading
+from scd41middleware import SCD41Middleware as SCD41 
 
 def convertTimeToFloat(hrs, min):    
     return float(hrs)+float(min)/60.0
@@ -27,12 +28,12 @@ def getRidOfGarbage(timeString):
 
 class Ticker(threading.Thread):
     running = False   
-    sleepTime = 1800  
+    #sleepTime = 1800  
     """sleep time in seconds"""
-    def run(self) -> None:
+    def run(self,sleepTime = 1800) -> None:
         self.running = True
         startTime = datetime.datetime.now()
-        endTime = startTime + datetime.timedelta(seconds=self.sleepTime)
+        endTime = startTime + datetime.timedelta(seconds=sleepTime)
         currentTime = startTime
         while currentTime<endTime:
             sleep(10)
@@ -40,13 +41,13 @@ class Ticker(threading.Thread):
         self.running = False        
 
 def canIclose(now) -> whatToDo:    
-    global firstTime, userClosingTrigger, userOpeningTrigger, manualOverride, lastSensorRead,tooCold,tooHumid, tickTack
+    global firstTime, userClosingTrigger, userOpeningTrigger, manualOverride, lastSensorRead,tooCold,tooMuchCO2, tickTack
     nowf = convertTimeToFloat(now.hour,now.minute)
     isItWeekday = datetime.datetime.now().isoweekday()<=5
     if (now>lastSensorRead+datetime.timedelta(minutes=1) or firstTime): #read it no frequent than once per minute - those changes are not that rapid
         sensor.values()
-        tooCold = sensor.lastTemperatureMeasurement<closeBelowThisTemp
-        tooHumid = False #sensor.readHumidity()>openAboveThisHumidity
+        tooCold = sensor.temperature()<closeBelowThisTemp#sensor.lastTemperatureMeasurement<closeBelowThisTemp
+        tooMuchCO2 = sensor.co2()>openAboveThisCO2#False #sensor.readHumidity()>openAboveThisHumidity
         lastSensorRead = now
     if firstTime and WindowsController.isWindowOpen() != isWindow.unknown:
         firstTime = False
@@ -82,11 +83,11 @@ def canIclose(now) -> whatToDo:
                 tickTack= Ticker()
                 tickTack.start()
             return whatToDo.doNothing
-        #elif not isWindowOpen and tooHumid:
-        #    if not tickTack.running:
-        #        tickTack= Ticker()
-        #        tickTack.start()
-        #    return whatToDo.open
+        elif not isWindowOpen and tooMuchCO2:
+            if not tickTack.running:
+                tickTack= Ticker(180)
+                tickTack.start()
+            return whatToDo.open
     
     retVal = closeCondition(nowf, weekdayOpeningTime if isItWeekday else weekendOpeningTime,
         weekdayClosingTime if isItWeekday else weekendClosingTime)
@@ -106,24 +107,24 @@ def canIclose(now) -> whatToDo:
     return retVal
 
 def closeCondition(nowf, openingTime, closingTime)->whatToDo:
-    global tooHumid,tooCold
+    global tooMuchCO2,tooCold
     closingTime = nowf<openingTime or nowf>closingTime
     tempHumidCondition = bool
     if tooCold:
         tempHumidCondition = True
-    #elif tooHumid:
-    #    tempHumidCondition = False
+    elif tooMuchCO2:
+        tempHumidCondition = False
     return whatToDo.close if closingTime and tempHumidCondition else whatToDo.open
 
 def getSettings():
-    global manualOverride, weekendOpeningTime, weekendClosingTime, weekdayClosingTime, weekdayOpeningTime, closeBelowThisTemp, openAboveThisHumidity    
+    global manualOverride, weekendOpeningTime, weekendClosingTime, weekdayClosingTime, weekdayOpeningTime, closeBelowThisTemp, openAboveThisCO2    
     item00 = __generateSetting(settingNames.manualOverride.value, manualOverride, settingType.bool)
     item01 = __generateSetting(settingNames.weekendOpeningTime.value,weekendOpeningTime, settingType.floatHr)
     item02 = __generateSetting(settingNames.weekendClosingTime.value,weekendClosingTime, settingType.floatHr)
     item03 = __generateSetting(settingNames.weekdayOpeningTime.value,weekdayOpeningTime, settingType.floatHr)
     item04 = __generateSetting(settingNames.weekdayClosingTime.value,weekendClosingTime, settingType.floatHr)
     item05 = __generateSetting(settingNames.closeBelowThisTemp.value,closeBelowThisTemp, settingType.floatT)
-    item06 = __generateSetting(settingNames.openAboveThisHumidity.value,openAboveThisHumidity, settingType.floatH)
+    item06 = __generateSetting(settingNames.openAboveThisCO2.value,openAboveThisCO2, settingType.floatH)
     return [item00,item01,item02,item03,item04,item05,item06]
     
 
@@ -131,7 +132,7 @@ def __generateSetting(name, value, type):
     return { "name": name, "value": value, "type": type}
 
 def setSettings(settings):
-    global manualOverride, weekendOpeningTime, weekendClosingTime, weekdayClosingTime, weekdayOpeningTime, closeBelowThisTemp, openAboveThisHumidity    
+    global manualOverride, weekendOpeningTime, weekendClosingTime, weekdayClosingTime, weekdayOpeningTime, closeBelowThisTemp, openAboveThisCO2    
     for setting in settings:
         n = setting["name"]
         v = setting["value"]
@@ -153,8 +154,8 @@ def setSettings(settings):
         elif n==settingNames.closeBelowThisTemp.value:
             closeBelowThisTemp = float(v)
             print(f"Setting {n} to {v}")
-        elif n==settingNames.openAboveThisHumidity.value:
-            openAboveThisHumidity = float(v)
+        elif n==settingNames.openAboveThisCO2.value:
+            openAboveThisCO2 = float(v)
             print(f"Setting {n} to {v}")        
 
 def saveSettings():
@@ -191,16 +192,16 @@ weekendOpeningTime = 8.0
 weekendClosingTime = 23.0
 
 closeBelowThisTemp = 10.0
-openAboveThisHumidity = 90.0
+openAboveThisCO2 = 1300.0
 
 userClosingTrigger = False
 userOpeningTrigger = False
 
 tickTack = Ticker()
-sensor = BME280.BME280(bus=1,address=0x76)#TemperatureSensor.Si7021()
+sensor = SCD41()#BME280.BME280(bus=1,address=0x76)#TemperatureSensor.Si7021()
 tickTack.sleepTime=1800
 lastSensorRead = datetime.datetime.now()
 tooCold = False
-tooHumid = False
+tooMuchCO2 = False
 
 loadSettings()

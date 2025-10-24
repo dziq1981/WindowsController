@@ -4,12 +4,13 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import subprocess
 #import BME280 #TemperatureSensor
+from scd41middleware import SCD41Middleware as SCD41
 
 
 class Display():
     RST = None 
     disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)    
-    #sensor = BME280.BME280()#TemperatureSensor.Si7021()
+    sensor:SCD41 = SCD41() #BME280.BME280()#TemperatureSensor.Si7021()
     # Initialize library.
     disp.begin()
 
@@ -74,28 +75,28 @@ class Display():
         return newString
 
     def displayTemperature(self):
-        temp = -100#self.sensor.readTemp()        
+        temp = self.sensor.temperature()#-100#self.sensor.readTemp()        
         txt = f"{temp:.1f}°C"
         #print(txt)
         self.displayTextLine(txt,True,10,20)
 
     def displayhumidity(self):
-        hum = -100#self.sensor.readHumidity()
+        hum = self.sensor.humidity()#-100#self.sensor.readHumidity()
         txt = f"{hum:.1f}%"
         #print(txt)
         self.displayTextLine(txt,True,10,20)
 
     def displaySensorData(self):
-        tempC, presPa, humRH = -100,-100,-100#self.sensor.values() # read all data from the sensor
-        pres_hPa = presPa / 100 # convert air pressurr Pascals -> hPa (or mbar, if you prefer)
+        tempC, co2ppm, humRH = self.sensor.values()#-100,-100,-100#self.sensor.values() # read all data from the sensor
+        #pres_hPa = presPa / 100 # convert air pressurr Pascals -> hPa (or mbar, if you prefer)
         txtT = f"{tempC:.1f} °C"
         txtH = f"{humRH:.1f} %"
-        txtP = f"{pres_hPa:.1f} hPa"
+        txtC = f"{co2ppm:.1f} ppm"
         font = ImageFont.truetype('Super Mario Bros. 2.ttf', 9)
         self.draw.rectangle((0,0,self.width,self.height), outline=0, fill=0)
         self.draw.text((self.x, self.top+2), txtT,  font=font, fill=255)
         self.draw.text((self.x, self.top+13), txtH, font=font, fill=255)
-        self.draw.text((self.x, self.top+24), txtP,  font=font, fill=255)
+        self.draw.text((self.x, self.top+24), txtC,  font=font, fill=255)
         self.disp.image(self.image)
         self.disp.display()
 

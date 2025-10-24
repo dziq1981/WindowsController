@@ -18,7 +18,7 @@ class SettingsForm(FlaskForm):
     weekdayOpeningTime = TimeField("Tygodniowy czas otwarcia", default=__floatToTime(conditions.weekdayOpeningTime))
     weekdayClosingTime = TimeField("Tygodniowy czas zamknięcia", default=__floatToTime(conditions.weekdayClosingTime))
     closeBelowThisTemp = FloatField("Zamknij poniżej temperatury [°C]", validators=[number_range(min=6,max=35)], default = conditions.closeBelowThisTemp)
-    openAboveThisHumidity = FloatField("Otwórz powyżej wilgotności [%]", validators=[number_range(min=0,max=100)], default = conditions.openAboveThisHumidity)
+    openAboveThisHumidity = FloatField("Otwórz powyżej wilgotności [%]", validators=[number_range(min=0,max=100)], default = conditions.openAboveThisCO2)
     submit = SubmitField('Zatwierdź')
 
     def run(self):        
@@ -28,5 +28,5 @@ class SettingsForm(FlaskForm):
         self.weekdayOpeningTime = TimeField("Tygodniowy czas otwarcia", default=__floatToTime(conditions.weekdayOpeningTime))
         self.weekdayClosingTime = TimeField("Tygodniowy czas zamknięcia", default=__floatToTime(conditions.weekdayClosingTime))
         self.closeBelowThisTemp = FloatField("Zamknij poniżej temperatury [°C]", validators=[number_range(min=6,max=35)], default = conditions.closeBelowThisTemp)
-        self.openAboveThisHumidity = FloatField("Otwórz powyżej wilgotności [%]", validators=[number_range(min=0,max=100)], default = conditions.openAboveThisHumidity)
+        self.openAboveThisHumidity = FloatField("Otwórz powyżej wilgotności [%]", validators=[number_range(min=0,max=100)], default = conditions.openAboveThisCO2)
     

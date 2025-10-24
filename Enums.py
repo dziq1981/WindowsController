@@ -23,4 +23,4 @@ class settingNames(Enum):
     weekdayOpeningTime="Tygodniowa godzina otwarcia"
     weekdayClosingTime="Tygodniowa godzina zamknięcia"
     closeBelowThisTemp="Zamknij poniżej temperatury"
-    openAboveThisHumidity="Otwórz powyżej wilgotności"
+    openAboveThisCO2="Otwórz powyżej stężenia CO2"
