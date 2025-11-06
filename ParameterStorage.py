@@ -1,4 +1,5 @@
 import datetime
+import time
 import os.path
 from typing import Dict
 
@@ -7,7 +8,7 @@ __parameters = {}
 __results = {}
 __firstUse = True
 __allMeasurements = {}
-
+__counter = 0
 lastFullParameters = {}
 
 
@@ -26,16 +27,18 @@ def getUnit(paramName) ->str:
     return __parameters[paramName]
 
 def provideValue(paramName,value):
-    global __results
-    global __parameters
+    global __results, __parameters, __counter
     if not paramName in __parameters.keys():
         print("Invalid parameter name")
         return None
     __results[paramName] = value  
     #print ("results: " + str(len(__results)) + " params: " + str(len(__parameters)))   
-    if len(__results) == len(__parameters):
-        print("Data added")
-        __addToStack()
+    if len(__results) == len(__parameters):        
+        __counter+=1
+        if (__counter>=25):
+            __counter=0
+            print(str(time.time())+"Data added")
+            __addToStack()
 
 def __addToStack():
     global __allMeasurements
@@ -45,7 +48,7 @@ def __addToStack():
     __allMeasurements[datetime.datetime.now()]= dict(__results)
     lastFullParameters = dict(__results)
     __results.clear()
-    if len(__allMeasurements)>360:
+    if len(__allMeasurements)>75:
         dumpMeasurements()
 
 def __addCpuData():

@@ -21,9 +21,9 @@ class SCD4X_RPI:
         """
         self.bus_num = bus_num
         self.addr = SCD4X_I2C_ADDR
-        self.co2 = None
-        self.temperature = None
-        self.humidity = None
+        self.co2 = 50
+        self.temperature = 100.0
+        self.humidity = 50.0
         
         # Otwarcie magistrali I2C
         try:
@@ -91,7 +91,7 @@ class SCD4X_RPI:
 
         # Temperatura (3-4) i CRC (5)
         temp_ticks = (data[3] << 8) | data[4]
-        self.temperature = -45 + 175 * (temp_ticks / 65536.0)
+        self.temperature = -45 + 175 * (temp_ticks / 65536.0)+3
 
         # Wilgotność (6-7) i CRC (8)
         hum_ticks = (data[6] << 8) | data[7]
@@ -111,5 +111,5 @@ class SCD4X_RPI:
         
         # Sprawdzenie, czy bit 10 oznacza gotowość (0x07FF - gotowe, 0x0000 - niegotowe)
         status_word = (data[0] << 8) | data[1]
-        
+        #print( f"Status word: {status_word:04x}" )
         return (status_word & 0x07FF) != 0
