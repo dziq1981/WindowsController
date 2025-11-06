@@ -5,6 +5,9 @@ from wtforms.validators import number_range
 import conditions
 from Enums import settingNames
 import math, time
+
+
+
 class SettingsForm(FlaskForm):
 
     def __floatToTime(number):
@@ -18,15 +21,15 @@ class SettingsForm(FlaskForm):
     weekdayOpeningTime = TimeField("Tygodniowy czas otwarcia", default=__floatToTime(conditions.weekdayOpeningTime))
     weekdayClosingTime = TimeField("Tygodniowy czas zamknięcia", default=__floatToTime(conditions.weekdayClosingTime))
     closeBelowThisTemp = FloatField("Zamknij poniżej temperatury [°C]", validators=[number_range(min=6,max=35)], default = conditions.closeBelowThisTemp)
-    openAboveThisHumidity = FloatField("Otwórz powyżej wilgotności [%]", validators=[number_range(min=0,max=100)], default = conditions.openAboveThisCO2)
+    openAboveThisCO2 = FloatField("Otwórz powyżej wilgotności [ppm]", validators=[number_range(min=0,max=10000)], default = conditions.openAboveThisCO2)
     submit = SubmitField('Zatwierdź')
 
     def run(self):        
         self.manualOverride = BooleanField("Sterowanie ręczne", default=conditions.manualOverride)
-        self.weekendOpeningTime = TimeField("Weekendowy czas otwarcia", default=__floatToTime(conditions.weekendOpeningTime))
-        self.weekendClosingTime = TimeField("Weekendowy czas zamknięcia", default=__floatToTime(conditions.weekendClosingTime))
-        self.weekdayOpeningTime = TimeField("Tygodniowy czas otwarcia", default=__floatToTime(conditions.weekdayOpeningTime))
-        self.weekdayClosingTime = TimeField("Tygodniowy czas zamknięcia", default=__floatToTime(conditions.weekdayClosingTime))
+        self.weekendOpeningTime = TimeField("Weekendowy czas otwarcia", default=self.__floatToTime(conditions.weekendOpeningTime))
+        self.weekendClosingTime = TimeField("Weekendowy czas zamknięcia", default=self.__floatToTime(conditions.weekendClosingTime))
+        self.weekdayOpeningTime = TimeField("Tygodniowy czas otwarcia", default=self.__floatToTime(conditions.weekdayOpeningTime))
+        self.weekdayClosingTime = TimeField("Tygodniowy czas zamknięcia", default=self.__floatToTime(conditions.weekdayClosingTime))
         self.closeBelowThisTemp = FloatField("Zamknij poniżej temperatury [°C]", validators=[number_range(min=6,max=35)], default = conditions.closeBelowThisTemp)
-        self.openAboveThisHumidity = FloatField("Otwórz powyżej wilgotności [%]", validators=[number_range(min=0,max=100)], default = conditions.openAboveThisCO2)
+        self.openAboveThisCO2 = FloatField("Otwórz powyżej stężenia CO2 [ppm]", validators=[number_range(min=0,max=10000)], default = conditions.openAboveThisCO2)
     

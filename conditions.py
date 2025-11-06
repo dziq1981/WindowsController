@@ -169,10 +169,15 @@ def saveSettings():
         file.close()
 
 def loadSettings():
-    file = open("settings.cfg","r+t")
     strng = []
     settings = []
     try:
+        file = open("settings.cfg","r+t")
+        strng = file.readlines()
+    except FileNotFoundError:
+        print("Settings file not found, loading defaults")
+        saveSettings()
+        file = open("settings.cfg","r+t")
         strng = file.readlines()
     finally:
         file.close()
@@ -191,8 +196,8 @@ weekdayClosingTime=23.0
 weekendOpeningTime = 8.0
 weekendClosingTime = 23.0
 
-closeBelowThisTemp = 10.0
-openAboveThisCO2 = 1300.0
+closeBelowThisTemp = 15.0
+openAboveThisCO2 = 1500.0
 
 userClosingTrigger = False
 userOpeningTrigger = False

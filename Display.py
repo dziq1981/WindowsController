@@ -87,7 +87,7 @@ class Display():
         self.displayTextLine(txt,True,10,20)
 
     def displaySensorData(self):
-        tempC, co2ppm, humRH = self.sensor.values()#-100,-100,-100#self.sensor.values() # read all data from the sensor
+        tempC, humRH,co2ppm = self.sensor.values()#-100,-100,-100#self.sensor.values() # read all data from the sensor
         #pres_hPa = presPa / 100 # convert air pressurr Pascals -> hPa (or mbar, if you prefer)
         txtT = f"{tempC:.1f} °C"
         txtH = f"{humRH:.1f} %"
