@@ -1,7 +1,5 @@
 import Adafruit_SSD1306
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
+from PIL import Image, ImageDraw, ImageFont
 import subprocess
 #import BME280 #TemperatureSensor
 from scd41middleware import SCD41Middleware as SCD41
